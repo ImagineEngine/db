@@ -31,6 +31,7 @@ function transfer(request, response){
 function gameState(request, response){
   //request.body[]
   console.log(request.body)
+  
   response.send(JSON.stringify(game))
 }
 
