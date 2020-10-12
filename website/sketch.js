@@ -14,7 +14,7 @@ function draw() {
 async function start() {
   await fetch('https://www.cloudflare.com/cdn-cgi/trace', {method: 'GET'}).then(response => response.text()).then(text => { ip = text.split('\n')[2].split('=')[1] })
 
-  await fetch('https://db.imagineengine.repl.co/room', { method: 'POST', body: JSON.stringify({'ip': ip}), headers: { 'Content-Type': 'application/json' } }).then(response => response.text()).then(text => { player = text })
+  await fetch('https://db.imagineengine.repl.co/room', { method: 'POST', }).then(response => response.text()).then(text => { player = text })
   console.log(ip)
   game(player)
 }
