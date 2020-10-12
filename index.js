@@ -30,20 +30,20 @@ function transfer(request, response){
 
 function gameState(request, response){
   //request.body[]
-  console.log(request.body)
+  console.log(game[request.body['player']].position)
+  try {
+    game[request.body['player']].position = request.body['position']
+  }
+  catch(err) {
+    console.log('failed'))
+  }
   response.send(JSON.stringify(game))
 }
 
 function roomState(request, response){
-  if (request.body.ip in game){
-
-  }
-  else{
-    game[request.body.ip] = {position:{x: 0, y: 0}}
-    players += 1
-  }
-  console.log(request.body.ip)
-  response.send(request.body.ip)
+  response.send(String(players+1))
+  game[String(players+1)] = {position: {x: 0, y: 0}}
+  players += 1
 }
 
 function update(request, response){
