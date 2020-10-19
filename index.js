@@ -21,24 +21,8 @@ app.use(express.static('website'));
 app.use(express.json());
 //app.get('/room/:data', update)
 app.post('/room', roomState);
-app.post('/game', gameState);
-
-function transfer(request, response) {
-	console.log(request.body);
-	response.send(players);
-}
-
-function gameState(request, response) {
-	//request.body[]
-	//console.log(game[request.body['player']].position);
-	try {
-    game[request.body['player']].prev_pos = game[request.body['player']].position;
-		game[request.body['player']].position = request.body['position'];
-	} catch (err) {
-		
-	}
-	response.send(JSON.stringify(game));
-}
+app.post('/game', gameUpdate);
+app.get('/game', gameState)
 
 function roomState(request, response) {
   if(request.body['status'] == 'exit'){
@@ -49,15 +33,18 @@ function roomState(request, response) {
     game[String(players + 1)] = { position: { 'x': 0, 'y': 0 }, prev_pos: {'x': 0, 'y':0}};
     players += 1;
   }
-  console.log(request.body['player'])
+  //console.log(request.body['player'])
 }
 
-function update(request, response) {
-	var data = request.params;
-	file[data['data']] = 1;
-	fs.writeFile('data.json', JSON.stringify(file), a);
-	console.log(data['data']);
-	response.send('hello there');
+function gameUpdate(request, response) {
+	//request.body[]
+	//console.log(game[request.body['player']].position);
+
+  game[request.body['player']].prev_pos = game[request.body['player']].position
+  game[request.body['player']].position = request.body['position'];
+	response.send(JSON.stringify(game));
 }
 
-function a() {}
+function gameState(request, response){
+  response.send(JSON.stringify(game));
+}
