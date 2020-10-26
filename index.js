@@ -13,6 +13,13 @@ var players = 0;
 
 var game = {};
 
+function generatePoints(){
+  var pt_list;
+  for (var i = 0; i<= 100; i++){
+    pt_list.push({'x': Math.floor((Math.random() * 2000) + 1)-1000, 'y': Math.floor((Math.random() * 2000) + 1)-1000})
+  }
+}
+
 function listening() {
 	console.log('listening');
 }
@@ -33,14 +40,12 @@ function roomState(request, response) {
     game[String(players + 1)] = { position: { 'x': 0, 'y': 0 }, prev_pos: {'x': 0, 'y':0}};
     players += 1;
   }
-  //console.log(request.body['player'])
+  console.log(request.body['player'])
 }
 
 function gameUpdate(request, response) {
 	//request.body[]
 	//console.log(game[request.body['player']].position);
-
-  game[request.body['player']].prev_pos = game[request.body['player']].position
   game[request.body['player']].position = request.body['position'];
 	response.send(JSON.stringify(game));
 }

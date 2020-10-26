@@ -1,7 +1,42 @@
-html, body {
-  margin: 0;
-  padding: 0;
+html,
+body {
+  color: #FFFFFF;
+  background-color: #000000;
+  margin: auto;
+  text-align: center;
+  padding: 0px;
+  font-family: Arial, Helvetica, sans-serif;
 }
+
 canvas {
-  display: block;
+  display: none;
+}
+
+.main {
+  width: 100%;
+  font-size: 50px;
+  padding: 10px;
+  margin: 10px 20px;
+  background-color: #7777FF;
+  border-radius: 30px 0px;
+  transition-duration: 0.5s;
+  border: 5px solid #7777FF; 
+  color: white;
+}
+
+.main:hover {
+  background-color: #000000;
+  border: 5px solid #7777FF;
+  color: #7777FF;
+}
+
+.main::placeholder {
+  color: white;
+  opacity: 1;
+}
+
+.main:hover::placeholder {
+  color: #7777FF;
+  opacity: 1;
+  transition-duration: 0.5s;
 }

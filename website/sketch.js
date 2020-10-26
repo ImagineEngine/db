@@ -9,10 +9,11 @@ var joystickTouch = false;
 var joystickPosition = {'x': 0, 'y': 0}
 var last_time;
 var d;
+var sRatio;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  start()
+  //document.getElementById("defaultCanvas0").style = "display: none"
 }
 
 function preload(){
@@ -33,8 +34,13 @@ function vAdd(v1, v2){
 
 function saveData(JSON){
   gameData = JSON;
-  d = new Date();
-  last_time = d.getTime()
+  last_time = new Date().getTime()
+}
+
+async function getIp(){
+  var ip;
+  await fetch('https://www.cloudflare.com/cdn-cgi/trace', {method: 'GET'}).then(response => response.text()).then(text => {ip = text.split('\n')[2].split('=')[1]})
+  return ip;
 }
 
 function draw() {
@@ -61,24 +67,30 @@ function draw() {
     if (String(Object.keys(gameData)[i]) == String(player)){}
     //if(0 == 1){}
     else{
-      d = new Date;
-      var dist = Math.sqrt(Math.pow(gameData[Object.keys(gameData)[i]].prev_pos['x']-gameData[Object.keys(gameData)[i]].position['x'], 2)+Math.pow(gameData[Object.keys(gameData)[i]].prev_pos['y']-gameData[Object.keys(gameData)[i]].position['y'], 2))
+      //d = Math.sqrt(Math.pow(gameData[Object.keys(gameData)[i]].position.x-gameData[Object.keys(gameData)[i]].prev_pos.x, 2)+Math.pow(gameData[Object.keys(gameData)[i]].position.y-gameData[Object.keys(gameData)[i]].prev_pos.y, 2))
 
-      var glideR = ((d.getTime()-last_time)/1000)/(dist/400)
-      ppos = vAdd(vScale(gameData[Object.keys(gameData)[i]].position, glideR), vScale(gameData[Object.keys(gameData)[i]].prev_pos, (1-glideR)))
+      //var sRatio = ((new Date().getTime()-last_time)/1000)/(d/400)
+      //var position = vAdd(vScale(gameData[Object.keys(gameData)[i]].position, sRatio), vScale(gameData[Object.keys(gameData)[i]].prev_pos, (1-sRatio)))
+
       ellipse(gameData[Object.keys(gameData)[i]].position.x-x+windowWidth/2, gameData[Object.keys(gameData)[i]].position.y-y+windowHeight/2, 25, 25)
+      //ellipse(gameData[Object.keys(gameData)[i]].prev_pos.x-x+windowWidth/2, gameData[Object.keys(gameData)[i]].prev_pos.y-y+windowHeight/2, 25, 25)
+      //ellipse(position.x-x+windowWidth/2, position.y-y+windowHeight/2, 25, 25)
       //ellipse(gameData[Object.keys(gameData)[i]].position.x-x+windowWidth/2, gameData[Object.keys(gameData)[i]].position.y-y+windowHeight/2, 25, 25)
     }
   }
+  
   
 }
 
 
 async function start() {
+  //document.getElementById("defaultCanvas0").style = "display: block"
+  //document.getElementById("starting").style = "display: none"
   await fetch('https://db.imagineengine.repl.co/room', {method: 'POST'}).then(response => response.text()).then(text => { player = text })
   data = { 'player': player, 'position': {'x': x, 'y': y}}
 
-  fetch('https://db.imagineengine.repl.co/game', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } }).then(response => response.json()).then(JSON => saveData(JSON))
+  await fetch('https://db.imagineengine.repl.co/game', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } }).then(response => response.json()).then(JSON => saveData(JSON))
+  console.log(getIp())
   getData()
   game()
 }
@@ -99,6 +111,7 @@ async function game() {
     if (y<-1000){y=-1000}
     //console.log(Object.keys(gameData))
     //console.log(hyp(Number(joystickPosition.y/(windowWidth)*32), Number(joystickPosition.x/(windowWidth)*32))/2)
+    await sleep(10)
   }
 }
 
@@ -107,12 +120,10 @@ async function getData(){
     if (joystickTouch){
       data = { 'player': player, 'position': {'x': x, 'y': y}}
 
-      fetch('https://db.imagineengine.repl.co/game', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } }).then(response => response.json()).then(JSON => saveData(JSON))
+      fetch('https://db.imagineengine.repl.co/game', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } }).then(response => response.json()).then()
     }
-    else{
-      fetch('https://db.imagineengine.repl.co/game', { method: 'GET'}).then(response => response.json()).then(JSON => saveData(JSON))
-    }
-    await sleep(100);
+    fetch('https://db.imagineengine.repl.co/game', { method: 'GET'}).then(response => response.json()).then(JSON => saveData(JSON))
+    await sleep(25);
   }
 }
 
@@ -129,5 +140,5 @@ function touchEnded(){
 window.onbeforeunload = function () {
   fetch('https://db.imagineengine.repl.co/room', {method: 'POST', body: JSON.stringify({'status': 'exit', 'player': player}), headers: { 'Content-Type': 'application/json' } })
   done = true
-  return 'Do you want to quit'
+  //return 'Do you want to quit'
 }
