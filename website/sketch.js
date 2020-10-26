@@ -13,11 +13,12 @@ var sRatio;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  //document.getElementById("defaultCanvas0").style = "display: none"
+  start()
 }
 
 function preload(){
   img = loadImage('bg.jpg');
+  document.getElementById("p5_loading").style = "display: none"
 }
 
 function sleep(ms) {
@@ -84,8 +85,6 @@ function draw() {
 
 
 async function start() {
-  //document.getElementById("defaultCanvas0").style = "display: block"
-  //document.getElementById("starting").style = "display: none"
   await fetch('https://db.imagineengine.repl.co/room', {method: 'POST'}).then(response => response.text()).then(text => { player = text })
   data = { 'player': player, 'position': {'x': x, 'y': y}}
 
@@ -111,7 +110,7 @@ async function game() {
     if (y<-1000){y=-1000}
     //console.log(Object.keys(gameData))
     //console.log(hyp(Number(joystickPosition.y/(windowWidth)*32), Number(joystickPosition.x/(windowWidth)*32))/2)
-    await sleep(10)
+    await sleep(17)
   }
 }
 
@@ -123,7 +122,7 @@ async function getData(){
       fetch('https://db.imagineengine.repl.co/game', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } }).then(response => response.json()).then()
     }
     fetch('https://db.imagineengine.repl.co/game', { method: 'GET'}).then(response => response.json()).then(JSON => saveData(JSON))
-    await sleep(25);
+    await sleep(17);
   }
 }
 

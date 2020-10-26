@@ -9,7 +9,7 @@ body {
 }
 
 canvas {
-  display: none;
+  display: block;
 }
 
 .main {
