@@ -35,12 +35,12 @@ function roomState(request, response) {
   if(request.body['status'] == 'exit'){
     delete game[request.body['player']]
   }
-  else{
+  if(request.body['status'] == 'register'){
     response.send(String(players + 1));
-    game[String(players + 1)] = { position: { 'x': 0, 'y': 0 }, prev_pos: {'x': 0, 'y':0}};
+    game[String(players + 1)] = { position: { 'x': 0, 'y': 0 }, name: request.body['name']};
     players += 1;
   }
-  console.log(request.body['player'])
+  //console.log(request.body['player'])
 }
 
 function gameUpdate(request, response) {
